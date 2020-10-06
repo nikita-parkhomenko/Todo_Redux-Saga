@@ -1,4 +1,5 @@
 import { takeEvery, put, call } from 'redux-saga/effects';
+
 import { FETCH_TODOS, saveTodos } from './actions';
 
 export function* watchLoadData() {
@@ -6,12 +7,19 @@ export function* watchLoadData() {
 }
 
 function* workerLoadData() {
-    const data = yield call(getTodos);
-
-    yield put(saveTodos(data.slice(0, 5)));
+    const data = yield call(getTodosFromStorage);
+    
+    if (data) {
+        yield put(saveTodos(data));
+    }
 }
 
-function getTodos() {
-    return fetch('https://jsonplaceholder.typicode.com/todos')
-        .then(response => response.json())
+function getTodosFromStorage() {
+    const data = localStorage.getItem('state');
+
+    return JSON.parse(data);
+}
+
+export function setStoreToStorage(state) {
+    localStorage.setItem('state', JSON.stringify(state));
 }

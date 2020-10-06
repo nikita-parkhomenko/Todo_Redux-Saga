@@ -19,11 +19,9 @@ const TodoList = () => {
     return (
         <ListGroup className="todo-list">
             {
-                (todos.length > 0) && (
-                    todos.map(todo => (
-                        <TodoItem key={todo.id} {...todo} />
-                    ))
-                )
+                todos.length > 0 ? 
+                    todos.map(todo => <TodoItem key={todo.id} {...todo} />)
+                    : null
             }
         </ListGroup>
     )

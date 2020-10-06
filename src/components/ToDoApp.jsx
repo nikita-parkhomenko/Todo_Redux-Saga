@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -7,10 +7,16 @@ import './ToDoApp.scss';
 
 import TodoList from './TodoList/TodoList';
 import { addTodo } from '../redux/actions';
+import { setStoreToStorage } from '../redux/saga';
 
 const ToDoApp = () => {
     const [ newTodo, setNewTodo] = useState('');
+    const todos = useSelector(state => state.todos)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        setStoreToStorage(todos);
+    }, [todos]);
 
     return (
             <div className="todo-app">
