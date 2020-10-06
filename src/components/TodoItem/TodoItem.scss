@@ -1,0 +1,8 @@
+.todo-item {
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+        background-color: rgb(225, 248, 255);
+    }
+}

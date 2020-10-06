@@ -1,0 +1,35 @@
+.post-item {
+    position: relative;
+    width: 400px;
+    padding: 30px 15px 15px 15px;
+    margin-bottom: 20px;
+    border: 2px solid grey;
+    border-radius: 10px;
+    background-color: rgb(245, 245, 245);
+    cursor: pointer;
+    transition: 0.4s all;
+
+    &:hover {
+        background-color: rgb(229, 252, 255);
+        transform: scale(1.05);
+    }
+
+    &__remove-btn {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background-color: red;
+        color: white;
+        border: none;
+        outline: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &__remove-btn {
+            color: red;
+            background-color: #fff;
+            border: 1px solid white;
+        }
+    }
+}
