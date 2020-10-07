@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // local dependencies
-import './TodoList.scss';
 import TodoItem from '../TodoItem/TodoItem';
 import { initialize } from '../../redux/actions';
 import Loader from '../../UI/loader/loader';

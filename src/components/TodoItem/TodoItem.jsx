@@ -5,7 +5,6 @@ import { useDispatch} from 'react-redux';
 import { ListGroupItem } from 'reactstrap';
 
 // local dependencies
-import './TodoItem.scss';
 import { removeTodo } from '../../redux/actions';
 
 const TodoItem = ({ title, id }) => {

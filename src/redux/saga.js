@@ -1,11 +1,14 @@
 // outsource dependencies
-import { takeEvery, put, call, delay } from 'redux-saga/effects';
+import { takeEvery, put, call, delay, select } from 'redux-saga/effects';
 
 // local dependencies
-import { INITIALIZE, updateMeta } from './actions';
+import { INITIALIZE, ADD_TODO, REMOVE_TODO, UPDATE_STORAGE, updateMeta } from './actions';
 
 export function* initializeSaga() {
     yield takeEvery(INITIALIZE, workerInitialize);
+    yield takeEvery(ADD_TODO, workerAddTodo);
+    yield takeEvery(REMOVE_TODO, workerRemoveTodo);
+    yield takeEvery(UPDATE_STORAGE, workerUpdateStorage);
 }
 
 function* workerInitialize() {
@@ -16,15 +19,33 @@ function* workerInitialize() {
     }
 
     yield delay(2 * 1000);
-    yield put(updateMeta({ initialized: true }))
+    yield put(updateMeta({ initialized: true }));
 }
 
 function getTodosFromStorage() {
-    const data = localStorage.getItem('state');
+    const state = localStorage.getItem('state');
 
-    return JSON.parse(data);
+    return JSON.parse(state);
 }
 
-export function setStoreToStorage(state) {
-    localStorage.setItem('state', JSON.stringify(state));
+function* workerAddTodo({ payload }) {
+    const todos = yield select(state => state.todos);
+
+    yield put(updateMeta({ todos: [payload, ...todos] }));
+
+    yield put({ type: UPDATE_STORAGE });
+}
+
+function* workerRemoveTodo({ id }) {
+    const todos = yield select(state => state.todos);
+
+    yield put(updateMeta({ todos: todos.filter(todo => todo.id !== id) }));
+
+    yield put({ type: UPDATE_STORAGE });
+}
+
+function* workerUpdateStorage() {
+    const todos = yield select(state => state.todos);
+
+    localStorage.setItem('state', JSON.stringify(todos));
 }
