@@ -1,20 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // outsource dependencies
 import { Button } from 'reactstrap';
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 // local dependencies
 import TodoList from '../../components/TodoList/TodoList';
-import { addTodo, UPDATE_STORAGE } from '../../redux/actions';
+import { addTodo, CLEAR_TODOS } from './actions';
 
 const ToDoApp = () => {
     const [ newTodo, setNewTodo] = useState('');
-    const state = useSelector(state => state)
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch({ type: UPDATE_STORAGE });
-    }, [state]);
+    useEffect(() => () => dispatch({ type: CLEAR_TODOS }), []);
 
     return (
             <div className="todo-app">
