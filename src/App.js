@@ -1,19 +1,17 @@
+// outsource dependencies
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import './App.css';
-
+// local dependencies
 import store from './redux/store';
 import ToDoApp from './components/ToDoApp';
 
-function App() {
-  return (
-    <Provider store={store}>
-      <div className="App">
-        <ToDoApp />
-      </div>
-    </Provider>
-  );
-}
+const App = () => (
+  <Provider store={store}>
+    <div className="text-center">
+      <ToDoApp />
+    </div>
+  </Provider>
+);
 
 export default App;

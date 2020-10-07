@@ -1,17 +1,22 @@
-import { takeEvery, put, call } from 'redux-saga/effects';
+// outsource dependencies
+import { takeEvery, put, call, delay } from 'redux-saga/effects';
 
-import { FETCH_TODOS, saveTodos } from './actions';
+// local dependencies
+import { INITIALIZE, updateMeta } from './actions';
 
-export function* watchLoadData() {
-    yield takeEvery(FETCH_TODOS, workerLoadData);
+export function* initializeSaga() {
+    yield takeEvery(INITIALIZE, workerInitialize);
 }
 
-function* workerLoadData() {
+function* workerInitialize() {
     const data = yield call(getTodosFromStorage);
-    
+
     if (data) {
-        yield put(saveTodos(data));
+        yield put(updateMeta({ todos: [...data] }));
     }
+
+    yield delay(2 * 1000);
+    yield put(updateMeta({ initialized: true }))
 }
 
 function getTodosFromStorage() {

@@ -1,15 +1,26 @@
+// outsource dependencies
 import React from 'react';
-
-import { ListGroupItem } from 'reactstrap';
 import { Button } from 'reactstrap';
+import { useDispatch} from 'react-redux';
+import { ListGroupItem } from 'reactstrap';
 
+// local dependencies
 import './TodoItem.scss';
+import { removeTodo } from '../../redux/actions';
 
-const TodoItem = ({ title }) => {
+const TodoItem = ({ title, id }) => {
+    const dispatch = useDispatch();
+
     return (
-        <ListGroupItem className="todo-item">
+        <ListGroupItem 
+            className="todo-item font-weight-bold"
+        >
             {title}
-            <Button className="todo-item__remove-btn" color="danger">
+            <Button 
+                color="danger"
+                className="todo-item__remove-btn"
+                onClick={() => dispatch(removeTodo(id))}
+            >
                 remove
             </Button>
         </ListGroupItem>
