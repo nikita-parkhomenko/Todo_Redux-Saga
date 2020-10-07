@@ -1,17 +1,30 @@
-import { takeEvery, put, call } from 'redux-saga/effects';
-import { FETCH_TODOS, saveTodos } from './actions';
+// outsource dependencies
+import { takeEvery, put, call, delay } from 'redux-saga/effects';
 
-export function* watchLoadData() {
-    yield takeEvery(FETCH_TODOS, workerLoadData);
+// local dependencies
+import { INITIALIZE, updateMeta } from './actions';
+
+export function* initializeSaga() {
+    yield takeEvery(INITIALIZE, workerInitialize);
 }
 
-function* workerLoadData() {
-    const data = yield call(getTodos);
+function* workerInitialize() {
+    const data = yield call(getTodosFromStorage);
 
-    yield put(saveTodos(data.slice(0, 5)));
+    if (data) {
+        yield put(updateMeta({ todos: [...data] }));
+    }
+
+    yield delay(2 * 1000);
+    yield put(updateMeta({ initialized: true }))
 }
 
-function getTodos() {
-    return fetch('https://jsonplaceholder.typicode.com/todos')
-        .then(response => response.json())
+function getTodosFromStorage() {
+    const data = localStorage.getItem('state');
+
+    return JSON.parse(data);
+}
+
+export function setStoreToStorage(state) {
+    localStorage.setItem('state', JSON.stringify(state));
 }

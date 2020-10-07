@@ -1,8 +1,10 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+// outsource dependencies
 import createSagaMiddleware from 'redux-saga';
-import { watchLoadData } from './saga';
+import { createStore, applyMiddleware, compose } from 'redux';
 
+// local dependencies
 import reducer from './reducer';
+import { initializeSaga } from './saga';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -12,6 +14,6 @@ const store = createStore(reducer, compose(
     )
 );
 
-sagaMiddleware.run(watchLoadData);
+sagaMiddleware.run(initializeSaga);
 
 export default store;

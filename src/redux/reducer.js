@@ -1,8 +1,9 @@
-import { ADD_TODO, SAVE_TODOS } from './actions';
+import { ADD_TODO, META, REMOVE_TODO } from './actions';
 
 const initial_state = {
     todos: [],
-}
+    initialized: false,
+};
 
 const reducer = (state=initial_state, action) => {
     switch (action.type) {
@@ -11,17 +12,22 @@ const reducer = (state=initial_state, action) => {
                 ...state,
                 todos: [action.todo, ...state.todos],
             }
+        
+            case META:
+                return {
+                    ...state,
+                    ...action.payload,
+                }
 
-        case SAVE_TODOS:
-            return {
-                ...state,
-                todos: [...action.todos, ...state.todos],
-            }
+            case REMOVE_TODO:
+                return {
+                    ...state,
+                    todos: state.todos.filter(todo => todo.id !== action.id)
+                }
 
         default:
             return state;
     }
 }
-
 
 export default reducer;
