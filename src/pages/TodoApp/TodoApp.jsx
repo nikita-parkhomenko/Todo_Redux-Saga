@@ -1,23 +1,20 @@
 // outsource dependencies
 import { Button } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // local dependencies
-import './ToDoApp.scss';
-import TodoList from './TodoList/TodoList';
-import { addTodo } from '../redux/actions';
-import { setStoreToStorage } from '../redux/saga';
+import TodoList from '../../components/TodoList/TodoList';
+import { addTodo, UPDATE_STORAGE } from '../../redux/actions';
 
 const ToDoApp = () => {
     const [ newTodo, setNewTodo] = useState('');
-    const todos = useSelector(state => state.todos);
+    const state = useSelector(state => state)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setStoreToStorage(todos);
-    }, [todos]);
+        dispatch({ type: UPDATE_STORAGE });
+    }, [state]);
 
     return (
             <div className="todo-app">
