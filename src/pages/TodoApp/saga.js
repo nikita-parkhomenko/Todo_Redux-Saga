@@ -2,34 +2,29 @@
 import { takeEvery, put, call, delay, select } from 'redux-saga/effects';
 
 // local dependencies
-import { INITIALIZE, ADD_TODO, REMOVE_TODO, UPDATE_STORAGE, updateMeta } from './actions';
+import { INITIALIZE_TODOS, ADD_TODO, REMOVE_TODO, UPDATE_STORAGE, TOGGLE_COMPLETED, updateMeta } from './actions';
 
-export function* initializeSaga() {
-    yield takeEvery(INITIALIZE, workerInitialize);
+export default function* initializeTodos() {
+    yield takeEvery(INITIALIZE_TODOS, workerInitialize);
     yield takeEvery(ADD_TODO, workerAddTodo);
     yield takeEvery(REMOVE_TODO, workerRemoveTodo);
     yield takeEvery(UPDATE_STORAGE, workerUpdateStorage);
 }
 
 function* workerInitialize() {
-    const data = yield call(getTodosFromStorage);
+    const data = yield call(() => {
+        const state = localStorage.getItem('state');
+        return JSON.parse(state);
+    });
 
-    if (data) {
-        yield put(updateMeta({ todos: [...data] }));
-    }
+    yield put(updateMeta({ todos: (data || []) }));
 
     yield delay(2 * 1000);
     yield put(updateMeta({ initialized: true }));
 }
 
-function getTodosFromStorage() {
-    const state = localStorage.getItem('state');
-
-    return JSON.parse(state);
-}
-
 function* workerAddTodo({ payload }) {
-    const todos = yield select(state => state.todos);
+    const todos = yield select(state => state.todosReducer.todos);
 
     yield put(updateMeta({ todos: [payload, ...todos] }));
 
@@ -37,15 +32,15 @@ function* workerAddTodo({ payload }) {
 }
 
 function* workerRemoveTodo({ id }) {
-    const todos = yield select(state => state.todos);
+    const todos = yield select(state => state.todosReducer.todos);
 
     yield put(updateMeta({ todos: todos.filter(todo => todo.id !== id) }));
 
-    yield put({ type: UPDATE_STORAGE });
+    yield put({ type: UPDATE_STORAGE, data: 'some data' });
 }
 
 function* workerUpdateStorage() {
-    const todos = yield select(state => state.todos);
+    const todos = yield select(state => state.todosReducer.todos);
 
     localStorage.setItem('state', JSON.stringify(todos));
 }

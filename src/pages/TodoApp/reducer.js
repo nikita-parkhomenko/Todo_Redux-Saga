@@ -1,11 +1,11 @@
-import { META } from './actions';
+import { META, CLEAR_TODOS } from './actions';
 
 const initial_state = {
     todos: [],
     initialized: false,
 };
 
-const reducer = (state=initial_state, action) => {
+const todosReducer = (state=initial_state, action) => {
     switch (action.type) {
             case META:
                 return {
@@ -13,9 +13,12 @@ const reducer = (state=initial_state, action) => {
                     ...action.payload,
                 }
 
+            case CLEAR_TODOS:
+                return initial_state;
+
         default:
             return state;
     }
 }
 
-export default reducer;
+export default todosReducer;

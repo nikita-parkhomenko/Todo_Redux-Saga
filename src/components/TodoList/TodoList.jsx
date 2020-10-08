@@ -1,17 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // outsource dependencies
+import { Spinner } from 'reactstrap';
 import { ListGroup } from 'reactstrap';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // local dependencies
 import TodoItem from '../TodoItem/TodoItem';
-import { initialize } from '../../redux/actions';
-import Loader from '../../UI/loader/loader';
+import { initialize } from '../../pages/TodoApp/actions';
 
 
 const TodoList = () => {
-    const todos = useSelector(state => state.todos);
-    const initialized = useSelector(state => state.initialized);
+    const todos = useSelector(state => state.todosReducer.todos);
+    const initialized = useSelector(state => state.todosReducer.initialized);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -19,11 +20,13 @@ const TodoList = () => {
     }, []);
 
     if (!initialized) {
-        return <Loader />;
+        return <div>
+        <Spinner type="grow" color="primary" />
+      </div>;
     }
 
     return (
-        <ListGroup className="todo-list">
+        <ListGroup className="todo-list w-75 mx-auto">
             { (todos || []).map(todo => <TodoItem key={todo.id} {...todo} />) }
         </ListGroup>
     )

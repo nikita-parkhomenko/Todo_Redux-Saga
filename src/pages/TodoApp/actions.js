@@ -1,8 +1,9 @@
 export const META = 'META';
 export const ADD_TODO = 'ADD_TODO';
-export const INITIALIZE = 'INITIALIZE';
+export const CLEAR_TODOS = 'CLEAR_TODOS';
 export const REMOVE_TODO = 'REMOVE_TODO';
 export const UPDATE_STORAGE = 'UPDATE_STORAGE';
+export const INITIALIZE_TODOS = 'INITIALIZE_TODOS';
 
 export const addTodo = (payload) => ({
     type: ADD_TODO,
@@ -10,7 +11,7 @@ export const addTodo = (payload) => ({
 });
 
 export const initialize = () => ({
-    type: INITIALIZE,
+    type: INITIALIZE_TODOS,
 });
 
 export const removeTodo = (id) => ({

@@ -1,50 +1,57 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // outsource dependencies
 import { Button } from 'reactstrap';
+import { Form, Input } from 'reactstrap';
+import { useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 // local dependencies
 import TodoList from '../../components/TodoList/TodoList';
-import { addTodo, UPDATE_STORAGE } from '../../redux/actions';
+import { addTodo, CLEAR_TODOS } from './actions';
 
 const ToDoApp = () => {
     const [ newTodo, setNewTodo] = useState('');
-    const state = useSelector(state => state)
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch({ type: UPDATE_STORAGE });
-    }, [state]);
+    useEffect(() => () => dispatch({ type: CLEAR_TODOS }), []);
 
     return (
-            <div className="todo-app">
-                <header className="todo-app__header">
+            <div 
+                style={{ maxWidth: '800px'}}
+                className="w-75 d-flex flex-column align-items-stretch mx-auto"
+            >
+                <header 
+                    className="mb-3"
+                >
                     <h1>Todos</h1>
 
-                    <form onSubmit={e => {
-                        e.preventDefault();
+                    <Form 
+                        className="w-75 d-flex justify-content-between mx-auto"
+                        onSubmit={e => {
+                            e.preventDefault();
 
-                        dispatch(addTodo({
-                            title: newTodo,
-                            completed: false,
-                            id: +new Date(),
-                        }));
+                            dispatch(addTodo({
+                                title: newTodo,
+                                completed: false,
+                                id: +new Date(),
+                            }));
 
-                        setNewTodo('');
-                    }}
+                            setNewTodo('');
+                        }}
                     >
-                        <input
-                            onChange={e => setNewTodo(e.target.value)}
-                            value={newTodo}
-                            className="todo-app__new-todo"
+                        <Input
+                            bsSize="lg"
                             type="text"
+                            value={newTodo}
+                            className="w-75"
                             placeholder="What needs to be done?" 
+                            onChange={e => setNewTodo(e.target.value)}
                         />
 
-                        <Button color="primary">
-                            Add to list
+                        <Button className="w-20" color="primary">
+                            Add
                         </Button>
-                    </form>
+                    </Form>
                 </header>
 
                 <main>
