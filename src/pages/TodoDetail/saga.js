@@ -1,9 +1,10 @@
-import { call, put, takeEvery, delay } from 'redux-saga/effects';
+import { call, put, takeEvery, delay, select } from 'redux-saga/effects';
 
-import { INITIALIZE, SAVE_META } from './actions';
+import { INITIALIZE, SAVE_META, TOGGLE_COMPLETED } from './actions';
 
 export default function* initializeTodo() {
     yield takeEvery(INITIALIZE, workerInitializeTodo);
+    yield takeEvery(TOGGLE_COMPLETED, workerToggleCompleted);
 }
 
 function* workerInitializeTodo({ id }) {
@@ -20,4 +21,12 @@ function* workerInitializeTodo({ id }) {
     yield put({ type: SAVE_META, payload: { todo } });
     yield delay(1000);
     yield put({ type: SAVE_META, payload: { initialized: true } });
+}
+
+function* workerToggleCompleted({ id }) {
+    yield console.log('clicked', id)
+
+    const todos = select(state => state.todosReducer.todos);
+
+    console.log(todos)
 }

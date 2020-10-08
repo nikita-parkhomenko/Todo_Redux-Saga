@@ -26,7 +26,7 @@ const TodoList = () => {
     }
 
     return (
-        <ListGroup className="todo-list">
+        <ListGroup className="todo-list w-75 mx-auto">
             { (todos || []).map(todo => <TodoItem key={todo.id} {...todo} />) }
         </ListGroup>
     )

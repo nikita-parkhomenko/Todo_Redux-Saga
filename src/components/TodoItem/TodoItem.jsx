@@ -13,9 +13,14 @@ const TodoItem = ({ title, id }) => {
 
     return (
             <ListGroupItem 
-                className="todo-item font-weight-bold"
+                action
+                className="d-flex justify-content-between align-items-center font-weight-bold"
             >
-                <Link to={`/todos/${id}`}>{title}</Link>
+                <Link 
+                    to={`/todos/${id}`}
+                >
+                    {title}
+                </Link>
                 <Button 
                     color="danger"
                     className="todo-item__remove-btn"

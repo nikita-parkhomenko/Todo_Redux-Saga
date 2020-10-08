@@ -2,7 +2,7 @@
 import { takeEvery, put, call, delay, select } from 'redux-saga/effects';
 
 // local dependencies
-import { INITIALIZE_TODOS, ADD_TODO, REMOVE_TODO, UPDATE_STORAGE, updateMeta } from './actions';
+import { INITIALIZE_TODOS, ADD_TODO, REMOVE_TODO, UPDATE_STORAGE, TOGGLE_COMPLETED, updateMeta } from './actions';
 
 export default function* initializeTodos() {
     yield takeEvery(INITIALIZE_TODOS, workerInitialize);
