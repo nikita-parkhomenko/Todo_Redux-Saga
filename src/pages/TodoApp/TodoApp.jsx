@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 // outsource dependencies
 import { Button } from 'reactstrap';
 import { Form, Input } from 'reactstrap';
@@ -13,20 +12,19 @@ const ToDoApp = () => {
     const [ newTodo, setNewTodo] = useState('');
     const dispatch = useDispatch();
 
-    useEffect(() => () => dispatch({ type: CLEAR_TODOS }), []);
+    useEffect(() => () => dispatch({ type: CLEAR_TODOS }), [dispatch]);
 
     return (
             <div 
-                style={{ maxWidth: '800px'}}
-                className="w-75 d-flex flex-column align-items-stretch mx-auto"
+                className="d-flex flex-column align-items-stretch mx-auto"
             >
                 <header 
-                    className="mb-3"
+                    className="mb-3 d-flex flex-column align-items-center"
                 >
                     <h1>Todos</h1>
 
                     <Form 
-                        className="w-75 d-flex justify-content-between mx-auto"
+                        className="row w-100 d-flex justify-content-between"
                         onSubmit={e => {
                             e.preventDefault();
 
@@ -43,12 +41,12 @@ const ToDoApp = () => {
                             bsSize="lg"
                             type="text"
                             value={newTodo}
-                            className="w-75"
+                            className="col-9"
                             placeholder="What needs to be done?" 
                             onChange={e => setNewTodo(e.target.value)}
                         />
 
-                        <Button className="w-20" color="primary">
+                        <Button className="col-2" color="primary">
                             Add
                         </Button>
                     </Form>

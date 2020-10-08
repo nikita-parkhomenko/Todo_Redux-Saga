@@ -1,0 +1,8 @@
+.completed {
+    text-decoration: line-through;
+    color: rgb(117, 117, 117);
+  }
+  
+.pointer {
+  cursor: pointer;
+}

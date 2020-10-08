@@ -7,14 +7,15 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import store from './redux/store';
 import TodoApp from './pages/TodoApp/TodoApp';
 import TodoDetail from './pages/TodoDetail/TodoDetail';
+import { todosRoot, todoDetails } from './routes';
 
 const App = () => (
   <Router>
     <Provider store={store}>
-      <div className="text-center">
+      <div className="container">
         <Switch>
-          <Route path='/todos' exact component={TodoApp} />
-          <Route path='/todos/:id' component={TodoDetail} />
+          <Route path={todosRoot.path} exact component={TodoApp} />
+          <Route path={todoDetails.path} component={TodoDetail} />
         </Switch>
       </div>
     </Provider>

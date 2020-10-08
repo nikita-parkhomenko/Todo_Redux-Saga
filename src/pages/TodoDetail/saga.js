@@ -1,4 +1,4 @@
-import { call, put, takeEvery, delay, select } from 'redux-saga/effects';
+import { call, put, takeEvery, delay } from 'redux-saga/effects';
 
 import { INITIALIZE, SAVE_META, TOGGLE_COMPLETED } from './actions';
 
@@ -8,14 +8,7 @@ export default function* initializeTodo() {
 }
 
 function* workerInitializeTodo({ id }) {
-    yield console.log('init todo details')
-
-    const todos = yield call(() => {
-        const todos = localStorage.getItem('state');
-
-        return JSON.parse(todos);
-    });
-
+    const todos = yield call(getStorage);
     const todo = todos.find(todo => todo.id === +id);
 
     yield put({ type: SAVE_META, payload: { todo } });
@@ -24,9 +17,17 @@ function* workerInitializeTodo({ id }) {
 }
 
 function* workerToggleCompleted({ id }) {
-    yield console.log('clicked', id)
+    const todos = yield call(getStorage);
 
-    const todos = select(state => state.todosReducer.todos);
+    const todosAfterUpdate = todos.map(
+        todo => todo.id === +id ? {...todo, completed: !todo.completed} : todo
+    );
 
-    console.log(todos)
+    localStorage.setItem('state', JSON.stringify(todosAfterUpdate));
+    yield put({ type: SAVE_META, payload: { todo: {...todosAfterUpdate.find(todo => todo.id === +id)}} });
+}
+
+function getStorage() {
+    const todos = localStorage.getItem('state');
+    return JSON.parse(todos);
 }
