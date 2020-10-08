@@ -40,7 +40,10 @@ const TodoDetail = ({ match }) => {
                     All Todos
                 </Button>
             </Link>
-            <h3 onClick={() => dispatch({ type: TOGGLE_COMPLETED, id })}>
+            <h3 
+                className={`${todo.completed ? 'completed' : ''} pointer`}
+                onClick={() => dispatch({ type: TOGGLE_COMPLETED, id })}
+            >
                 {todo.title}
             </h3>
             <Badge 

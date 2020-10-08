@@ -9,7 +9,7 @@ import { ListGroupItem } from 'reactstrap';
 import { todoDetails } from '../../routes';
 import { removeTodo } from '../../pages/TodoApp/actions';
 
-const TodoItem = ({ title, id }) => {
+const TodoItem = ({ title, id, completed }) => {
     const dispatch = useDispatch();
 
     return (
@@ -18,7 +18,7 @@ const TodoItem = ({ title, id }) => {
                 className="d-flex justify-content-between align-items-center font-weight-bold"
             >
                 <Link 
-                    className="col-8"
+                    className={`col-8 ${completed ? 'completed' : ''}`}
                     to={todoDetails.link(id)}
                 >
                     {title}
