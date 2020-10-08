@@ -10,11 +10,8 @@ export default function* initializeTodo() {
 function* workerInitializeTodo({ id }) {
     yield console.log('init todo details')
 
-    const todos = yield call(() => {
-        const todos = localStorage.getItem('state');
-
-        return JSON.parse(todos);
-    });
+    const todosJson = yield call(() => localStorage.getItem('state'));
+    const todos = JSON.parse(todosJson);
 
     const todo = todos.find(todo => todo.id === +id);
 

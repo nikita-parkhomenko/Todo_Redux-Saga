@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 // outsource dependencies
 import { Spinner } from 'reactstrap';
 import { ListGroup } from 'reactstrap';
@@ -17,16 +16,16 @@ const TodoList = () => {
 
     useEffect(() => {
         dispatch(initialize());
-    }, []);
+    }, [dispatch]);
 
     if (!initialized) {
-        return <div>
-        <Spinner type="grow" color="primary" />
-      </div>;
+        return <div className="text-center">
+                <Spinner type="grow" color="primary" />
+            </div>;
     }
 
     return (
-        <ListGroup className="todo-list w-75 mx-auto">
+        <ListGroup className="mx-auto">
             { (todos || []).map(todo => <TodoItem key={todo.id} {...todo} />) }
         </ListGroup>
     )
