@@ -1,10 +1,12 @@
 import { call, put, takeEvery, delay } from 'redux-saga/effects';
 
-import { INITIALIZE, SAVE_META, TOGGLE_COMPLETED } from './actions';
+import { getStorage } from '../../api/api';
+import { INITIALIZE, SAVE_META, TOGGLE_COMPLETED, UPDATE_TODO } from './actions';
 
 export default function* initializeTodo() {
     yield takeEvery(INITIALIZE, workerInitializeTodo);
     yield takeEvery(TOGGLE_COMPLETED, workerToggleCompleted);
+    yield takeEvery(UPDATE_TODO, workerUpdateTodo);
 }
 
 function* workerInitializeTodo({ id }) {
@@ -12,22 +14,25 @@ function* workerInitializeTodo({ id }) {
     const todo = todos.find(todo => todo.id === +id);
 
     yield put({ type: SAVE_META, payload: { todo } });
-    yield delay(1000);
+    // yield delay(1000);
     yield put({ type: SAVE_META, payload: { initialized: true } });
 }
 
 function* workerToggleCompleted({ id }) {
     const todos = yield call(getStorage);
 
-    const todosAfterUpdate = todos.map(
+    const updatedTodos = todos.map(
         todo => todo.id === +id ? {...todo, completed: !todo.completed} : todo
     );
 
-    localStorage.setItem('state', JSON.stringify(todosAfterUpdate));
-    yield put({ type: SAVE_META, payload: { todo: {...todosAfterUpdate.find(todo => todo.id === +id)}} });
+    localStorage.setItem('state', JSON.stringify(updatedTodos));
+    yield put({ type: SAVE_META, payload: { todo: {...updatedTodos.find(todo => todo.id === +id)}} });
 }
 
-function getStorage() {
-    const todos = localStorage.getItem('state');
-    return JSON.parse(todos);
+function* workerUpdateTodo({ todo, values }) {
+    const todos = yield call(getStorage);
+    const updatedTodos = todos.map((task) => task.id === todo.id ? {...todo, ...values} : task);
+    console.log(updatedTodos);
+
+    localStorage.setItem('state', JSON.stringify(updatedTodos));
 }

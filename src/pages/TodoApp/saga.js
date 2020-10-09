@@ -2,6 +2,7 @@
 import { takeEvery, put, call, delay, select } from 'redux-saga/effects';
 
 // local dependencies
+import { getStorage } from '../../api/api';
 import { INITIALIZE_TODOS, ADD_TODO, REMOVE_TODO, UPDATE_STORAGE, updateMeta } from './actions';
 
 export default function* initializeTodos() {
@@ -12,14 +13,11 @@ export default function* initializeTodos() {
 }
 
 function* workerInitialize() {
-    const data = yield call(() => {
-        const state = localStorage.getItem('state');
-        return JSON.parse(state);
-    });
+    const data = yield call(getStorage);
 
     yield put(updateMeta({ todos: (data || []) }));
 
-    yield delay(2 * 1000);
+    // yield delay(2 * 1000);
     yield put(updateMeta({ initialized: true }));
 }
 
