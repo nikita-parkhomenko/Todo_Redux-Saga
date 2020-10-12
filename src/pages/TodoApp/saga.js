@@ -17,7 +17,7 @@ function* workerInitialize() {
 
     yield put(updateMeta({ todos: (data || []) }));
 
-    // yield delay(2 * 1000);
+    yield delay(2 * 1000);
     yield put(updateMeta({ initialized: true }));
 }
 

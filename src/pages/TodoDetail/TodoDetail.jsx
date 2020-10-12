@@ -18,11 +18,10 @@ const TodoDetail = ({ match }) => {
 
     const dispatch = useDispatch();
     const todo = useSelector(state => state.todoReducer.todo);
-    const [showAdditionalForm, setShowAdditionalForm] = useState(false);
     const initialized = useSelector(state => state.todoReducer.initialized);
 
     useEffect(() => {
-        dispatch({ type: INITIALIZE, id });
+        dispatch({ type: INITIALIZE, payload: {id} });
 
         return () => dispatch({ type: CLEAR_TODO })
     }, [dispatch, id]);
@@ -48,7 +47,7 @@ const TodoDetail = ({ match }) => {
             </Badge>
             <h3 
                 className={`${todo.completed ? 'completed' : ''} pointer`}
-                onClick={() => dispatch({ type: TOGGLE_COMPLETED, id })}
+                onClick={() => dispatch({ type: TOGGLE_COMPLETED, payload: {id} })}
             >
                 {todo.title}
             </h3>
@@ -58,20 +57,11 @@ const TodoDetail = ({ match }) => {
             >
                 {todo.completed ? 'completed' : 'not completed'}
             </Badge>
-            <h5>
+            <h5 className="mb-5">
                 {todo.description}
             </h5>
-            <Button 
-                size="sm" 
-                className="mt-5" 
-                color={showAdditionalForm ? "danger" : "primary"}
-                onClick={() => setShowAdditionalForm(oldShow => !oldShow)}
-            >
-                {showAdditionalForm ? 'Close additional form' : 'Add additional info'}
-            </Button>
-            {
-                showAdditionalForm && <TodoAdditionalForm todo={todo} />
-            }
+
+            <TodoAdditionalForm todo={todo} />
 
         </Jumbotron>
     )

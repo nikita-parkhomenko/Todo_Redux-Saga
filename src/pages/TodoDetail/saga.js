@@ -9,7 +9,7 @@ export default function* initializeTodo() {
     yield takeEvery(UPDATE_TODO, updateTodoSaga);
 }
 
-function* initializeTodoSaga({ id }) {
+function* initializeTodoSaga({ payload: { id } }) {
     const todos = yield call(getStorage);
     const todo = todos.find(todo => todo.id === +id);
 
@@ -18,7 +18,7 @@ function* initializeTodoSaga({ id }) {
     yield put({ type: SAVE_META, payload: { initialized: true } });
 }
 
-function* toggleCompletedSaga({ id }) {
+function* toggleCompletedSaga({ payload: { id } }) {
     const todos = yield call(getStorage);
 
     const updatedTodos = todos.map(
@@ -29,17 +29,12 @@ function* toggleCompletedSaga({ id }) {
     yield put({ type: SAVE_META, payload: { todo: updatedTodos.find(todo => todo.id === +id)} });
 }
 
-function* updateTodoSaga({ todo, values }) {
+function* updateTodoSaga({ payload: { todo, values } }) {
     const todos = yield call(getStorage);
     const updatedTodo = { ...todo, ...values };
     const updatedTodos = todos.map((task) => task.id === todo.id ? updatedTodo : task);
 
     localStorage.setItem('state', JSON.stringify(updatedTodos));
 
-    yield put({ type: SAVE_META, payload: { initialized: false } });
-    yield put({ type: SAVE_META, payload: { updatedTodo } });
-
-    yield delay(1000);
-
-    yield put({ type: SAVE_META, payload: { initialized: true } });
+    yield put({ type: SAVE_META, payload: { todo: updatedTodo } });
 }

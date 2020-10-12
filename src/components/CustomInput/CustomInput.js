@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Input, Label } from 'reactstrap';
 
 const CustomInput = ({ label, placeholder, input, type, meta: { touched, error } }) => {
-    const valid = touched && !error ? !error : null;
+    const valid = useMemo(() => touched && !error ? !error : null, [error, touched]);
 
     return (
         <div className="input-row mb-3">
