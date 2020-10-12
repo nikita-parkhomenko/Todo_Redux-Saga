@@ -1,5 +1,5 @@
 // outsource dependencies
-import React from 'react';
+import React, { useMemo} from 'react';
 import { useDispatch } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Form, Button } from 'reactstrap';
@@ -35,7 +35,8 @@ const TodoAdditionalForm = ({ handleSubmit, pristine, reset, submitting, todo })
     const dispatch = useDispatch();
 
     const submitForm = values => {
-        dispatch({ type: UPDATE_TODO, values, todo })
+        dispatch({ type: UPDATE_TODO, values, todo });
+        dispatch(reset('additional'));
     }
 
     return (

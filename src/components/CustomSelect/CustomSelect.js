@@ -1,19 +1,20 @@
 import React from 'react';
 import { Input, Label } from 'reactstrap';
 
-const CustomSelect = ({ options, label, meta: { touched, error } }) => {
+const CustomSelect = ({ options, label, input, meta: { touched, error } }) => {
+    console.log(input)
     return (
         <div className="input-row mb-3">
             <Label>{label}</Label>
-            <Input type="select" >
+            <Input type="select" {...input}>
                 <option></option>
                 {
                     options.map(({ value, text }) => (
-                    <option key={value} name={value} value={value}>{text}</option>
+                    <option key={value} value={value}>{text}</option>
                     ))
                 }
             </Input>
-            {touched && error && <div className="warning">{error}</div>}
+            {touched && error && <div className="text-danger">{error}</div>}
         </div>
     )
 }

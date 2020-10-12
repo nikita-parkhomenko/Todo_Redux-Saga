@@ -14,11 +14,9 @@ const App = () => (
     <Provider store={store}>
       <div className="container">
         <Switch>
-          <Route exact path="/">
-            <Redirect to={todosRoot.path} />
-          </Route>
           <Route path={todosRoot.path} exact component={TodoApp} />
           <Route path={todoDetails.path} exact component={TodoDetail} />
+          <Redirect to={todosRoot.path} />
         </Switch>
       </div>
     </Provider>

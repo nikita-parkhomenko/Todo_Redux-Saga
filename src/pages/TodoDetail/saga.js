@@ -4,21 +4,21 @@ import { getStorage } from '../../api/api';
 import { INITIALIZE, SAVE_META, TOGGLE_COMPLETED, UPDATE_TODO } from './actions';
 
 export default function* initializeTodo() {
-    yield takeEvery(INITIALIZE, workerInitializeTodo);
-    yield takeEvery(TOGGLE_COMPLETED, workerToggleCompleted);
-    yield takeEvery(UPDATE_TODO, workerUpdateTodo);
+    yield takeEvery(INITIALIZE, initializeTodoSaga);
+    yield takeEvery(TOGGLE_COMPLETED, toggleCompletedSaga);
+    yield takeEvery(UPDATE_TODO, updateTodoSaga);
 }
 
-function* workerInitializeTodo({ id }) {
+function* initializeTodoSaga({ id }) {
     const todos = yield call(getStorage);
     const todo = todos.find(todo => todo.id === +id);
 
     yield put({ type: SAVE_META, payload: { todo } });
-    // yield delay(1000);
+    yield delay(1000);
     yield put({ type: SAVE_META, payload: { initialized: true } });
 }
 
-function* workerToggleCompleted({ id }) {
+function* toggleCompletedSaga({ id }) {
     const todos = yield call(getStorage);
 
     const updatedTodos = todos.map(
@@ -26,13 +26,20 @@ function* workerToggleCompleted({ id }) {
     );
 
     localStorage.setItem('state', JSON.stringify(updatedTodos));
-    yield put({ type: SAVE_META, payload: { todo: {...updatedTodos.find(todo => todo.id === +id)}} });
+    yield put({ type: SAVE_META, payload: { todo: updatedTodos.find(todo => todo.id === +id)} });
 }
 
-function* workerUpdateTodo({ todo, values }) {
+function* updateTodoSaga({ todo, values }) {
     const todos = yield call(getStorage);
-    const updatedTodos = todos.map((task) => task.id === todo.id ? {...todo, ...values} : task);
-    console.log(updatedTodos);
+    const updatedTodo = { ...todo, ...values };
+    const updatedTodos = todos.map((task) => task.id === todo.id ? updatedTodo : task);
 
     localStorage.setItem('state', JSON.stringify(updatedTodos));
+
+    yield put({ type: SAVE_META, payload: { initialized: false } });
+    yield put({ type: SAVE_META, payload: { updatedTodo } });
+
+    yield delay(1000);
+
+    yield put({ type: SAVE_META, payload: { initialized: true } });
 }

@@ -1,5 +1,6 @@
 // outsource dependencies
 import { Badge } from 'reactstrap';
+import { Alert } from 'reactstrap';
 import { Button } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 import { Jumbotron } from 'reactstrap';
@@ -42,6 +43,9 @@ const TodoDetail = ({ match }) => {
                     All Todos
                 </Button>
             </Link>
+            <Badge color="secondary" pill>
+                {todo.priority}
+            </Badge>
             <h3 
                 className={`${todo.completed ? 'completed' : ''} pointer`}
                 onClick={() => dispatch({ type: TOGGLE_COMPLETED, id })}
@@ -50,21 +54,23 @@ const TodoDetail = ({ match }) => {
             </h3>
             <Badge 
                 color={todo.completed ? 'success' : 'warning'} 
-                className="p-2 w-25"
+                className="p-2 mb-3 w-25"
             >
                 {todo.completed ? 'completed' : 'not completed'}
             </Badge>
+            <h5>
+                {todo.description}
+            </h5>
+            <Button 
+                size="sm" 
+                className="mt-5" 
+                color={showAdditionalForm ? "danger" : "primary"}
+                onClick={() => setShowAdditionalForm(oldShow => !oldShow)}
+            >
+                {showAdditionalForm ? 'Close additional form' : 'Add additional info'}
+            </Button>
             {
-                showAdditionalForm 
-                    ? <TodoAdditionalForm todo={todo} />
-                    : <Button 
-                        size="sm" 
-                        className="mt-5" 
-                        color="primary"
-                        onClick={() => setShowAdditionalForm(true)}
-                    >
-                        Add additional info
-                    </Button>
+                showAdditionalForm && <TodoAdditionalForm todo={todo} />
             }
 
         </Jumbotron>
