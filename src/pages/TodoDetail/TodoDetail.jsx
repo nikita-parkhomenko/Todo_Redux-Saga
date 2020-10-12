@@ -1,22 +1,24 @@
 // outsource dependencies
 import { Badge } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 import { Jumbotron } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import React, { useEffect } from 'react';
-import { Button } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // local dependencies
 import { todosRoot } from '../../routes';
 import { INITIALIZE, CLEAR_TODO, TOGGLE_COMPLETED } from './actions';
+import TodoAdditionalForm from '../../components/TodoAdditionalForm/TodoAdditionalForm';
 
 const TodoDetail = ({ match }) => {
     const {id} = match.params;
 
     const dispatch = useDispatch();
-    const initialized = useSelector(state => state.todoReducer.initialized);
     const todo = useSelector(state => state.todoReducer.todo);
+    const [showAdditionalForm, setShowAdditionalForm] = useState(false);
+    const initialized = useSelector(state => state.todoReducer.initialized);
 
     useEffect(() => {
         dispatch({ type: INITIALIZE, id });
@@ -52,6 +54,19 @@ const TodoDetail = ({ match }) => {
             >
                 {todo.completed ? 'completed' : 'not completed'}
             </Badge>
+            {
+                showAdditionalForm 
+                    ? <TodoAdditionalForm todo={todo} />
+                    : <Button 
+                        size="sm" 
+                        className="mt-5" 
+                        color="primary"
+                        onClick={() => setShowAdditionalForm(true)}
+                    >
+                        Add additional info
+                    </Button>
+            }
+
         </Jumbotron>
     )
 }

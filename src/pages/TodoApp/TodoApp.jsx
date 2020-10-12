@@ -1,4 +1,5 @@
 // outsource dependencies
+import { Alert } from 'reactstrap';
 import { Button } from 'reactstrap';
 import { Form, Input } from 'reactstrap';
 import { useDispatch } from 'react-redux';
@@ -9,10 +10,29 @@ import TodoList from '../../components/TodoList/TodoList';
 import { addTodo, CLEAR_TODOS } from './actions';
 
 const ToDoApp = () => {
-    const [ newTodo, setNewTodo] = useState('');
+    const [ newTodo, setNewTodo ] = useState('');
+    const [ validationError, setValidationError ] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => () => dispatch({ type: CLEAR_TODOS }), [dispatch]);
+
+    const addNewTodo = (e) => {
+        e.preventDefault();
+
+        if (!newTodo.trim()) {
+            setValidationError(true);
+            return;
+        }
+
+        dispatch(addTodo({
+            title: newTodo,
+            completed: false,
+            id: +new Date(),
+            })
+        );
+
+        setNewTodo('');
+    }
 
     return (
             <div 
@@ -24,18 +44,8 @@ const ToDoApp = () => {
                     <h1>Todos</h1>
 
                     <Form 
-                        className="row w-100 d-flex justify-content-between"
-                        onSubmit={e => {
-                            e.preventDefault();
-
-                            dispatch(addTodo({
-                                title: newTodo,
-                                completed: false,
-                                id: +new Date(),
-                            }));
-
-                            setNewTodo('');
-                        }}
+                        className="row w-100 d-flex justify-content-between mb-2"
+                        onSubmit={e => addNewTodo(e)}
                     >
                         <Input
                             bsSize="lg"
@@ -43,13 +53,21 @@ const ToDoApp = () => {
                             value={newTodo}
                             className="col-9"
                             placeholder="What needs to be done?" 
-                            onChange={e => setNewTodo(e.target.value)}
+                            onChange={e => {
+                                if (e.target.value.trimLeft()) {
+                                    setValidationError(false);
+                                }
+                                setNewTodo(e.target.value)
+                            }}
                         />
 
                         <Button className="col-2" color="primary">
                             Add
                         </Button>
                     </Form>
+                    {
+                        validationError && <Alert color="danger">Please enter your task first</Alert>
+                    }
                 </header>
 
                 <main>
