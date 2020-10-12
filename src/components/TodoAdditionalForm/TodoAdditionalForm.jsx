@@ -1,5 +1,5 @@
 // outsource dependencies
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Form, Button } from 'reactstrap';
@@ -25,7 +25,7 @@ const validate = values => {
     return errors;
 }
 
-const priorityOptins = [
+const priorityOptions = [
     { value: 'low', text: 'Low' },
     { value: 'medium', text: 'Medium' },
     { value: 'high', text: 'High' },
@@ -34,9 +34,9 @@ const priorityOptins = [
 const TodoAdditionalForm = ({ handleSubmit, pristine, reset, submitting, todo }) => {
     const dispatch = useDispatch();
 
-    const submitForm = values => {
-        dispatch({ type: UPDATE_TODO, values, todo })
-    }
+    const submitForm = useCallback(values => {
+        dispatch({ type: UPDATE_TODO, payload: { values, todo } });
+    }, [dispatch, todo]);
 
     return (
         <div className="p-3 d-flex flex-column bg-gradient-light text-dark">
@@ -61,7 +61,7 @@ const TodoAdditionalForm = ({ handleSubmit, pristine, reset, submitting, todo })
                 <Field 
                     label="Add priority" 
                     name="priority" 
-                    options={priorityOptins} 
+                    options={priorityOptions} 
                     component={CustomSelect} 
                 />
 
