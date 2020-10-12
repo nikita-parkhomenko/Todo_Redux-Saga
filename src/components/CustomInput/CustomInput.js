@@ -7,10 +7,9 @@ const CustomInput = ({ label, placeholder, input, type, meta: { touched, error }
         <div className="input-row mb-3">
             <Label>{label}</Label>
             <Input {...(touched ? { valid: !error } : {})} type={type} placeholder={placeholder} {...input} />
-            {error && <div>{error}</div>}
+            {error && touched && <div className="warning">{error}</div>}
         </div>
     )
 }
 
 export default CustomInput;
-
