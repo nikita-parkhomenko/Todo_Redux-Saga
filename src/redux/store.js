@@ -1,6 +1,6 @@
 // outsource dependencies
 import createSagaMiddleware from 'redux-saga';
-import { reducer as formReducer } from 'redux-form';
+import { reducer as form } from 'redux-form';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 
 // local dependencies
@@ -12,7 +12,7 @@ const sagaMiddleware = createSagaMiddleware();
 const rootReducer = combineReducers({
     todosReducer,
     todoReducer,
-    form: formReducer,
+    form,
 });
 
 const store = createStore(rootReducer, compose(

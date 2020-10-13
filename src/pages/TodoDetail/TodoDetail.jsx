@@ -1,11 +1,10 @@
 // outsource dependencies
 import { Badge } from 'reactstrap';
-import { Alert } from 'reactstrap';
 import { Button } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 import { Jumbotron } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // local dependencies
@@ -53,7 +52,7 @@ const TodoDetail = ({ match }) => {
             </h3>
             <Badge 
                 color={todo.completed ? 'success' : 'warning'} 
-                className="p-2 mb-3 w-25"
+                className="p-2 mb-3"
             >
                 {todo.completed ? 'completed' : 'not completed'}
             </Badge>
