@@ -1,73 +1,61 @@
 // outsource dependencies
-import { Alert } from 'reactstrap';
+import { Form } from 'reactstrap';
 import { Button } from 'reactstrap';
-import { Form, Input } from 'reactstrap';
 import { useDispatch } from 'react-redux';
-import React, { useState, useEffect } from 'react';
+import { Field, reduxForm } from 'redux-form';
+import React, { useEffect, useCallback } from 'react';
+import CustomInput from '../../components/CustomInput/CustomInput';
 
 // local dependencies
+import TYPE from './actions';
 import TodoList from '../../components/TodoList/TodoList';
-import { addTodo, CLEAR_TODOS } from './actions';
 
-const ToDoApp = () => {
-    const [ newTodo, setNewTodo ] = useState('');
-    const [ validationError, setValidationError ] = useState(false);
-    const dispatch = useDispatch();
+const validate = values => {
+    const error = {};
 
-    useEffect(() => () => dispatch({ type: CLEAR_TODOS }), [dispatch]);
-
-    const addNewTodo = (e) => {
-        e.preventDefault();
-
-        if (!newTodo.trim()) {
-            setValidationError(true);
-            return;
-        }
-
-        dispatch(addTodo({
-            title: newTodo,
-            completed: false,
-            id: +new Date(),
-            })
-        );
-
-        setNewTodo('');
+    if (!values.todo) {
+        error.todo = 'Required!'
+    } else if (values.todo.length < 5) {
+        error.todo = 'Must be 5 characters or more'
     }
 
+    return error;
+}
+
+const ToDoApp = ({ handleSubmit }) => {
+    const dispatch = useDispatch();
+
+    useEffect(() => () => dispatch({ type: TYPE.CLEAR }), [dispatch]);
+
+    const submit = useCallback( (values) => {
+        const todo = {
+            title: values.todo,
+            completed: false,
+            id: Date.now()
+        }
+
+        dispatch({ type: TYPE.ADD, payload: todo });
+    }, [dispatch]);
+
     return (
-            <div 
-                className="d-flex flex-column align-items-stretch mx-auto"
-            >
-                <header 
-                    className="mb-3 d-flex flex-column align-items-center"
-                >
+            <div className="d-flex flex-column align-items-stretch mx-auto">
+                <header className="mb-3 d-flex flex-column align-items-center">
                     <h1>Todos</h1>
 
                     <Form 
-                        className="row w-100 d-flex justify-content-between mb-2"
-                        onSubmit={e => addNewTodo(e)}
+                        onSubmit={handleSubmit(submit)}
+                        className="row w-100 d-flex justify-content-between align-items-center mb-2"
                     >
-                        <Input
-                            bsSize="lg"
-                            type="text"
-                            value={newTodo}
-                            className="col-9"
-                            placeholder="What needs to be done?" 
-                            onChange={e => {
-                                if (e.target.value.trimLeft()) {
-                                    setValidationError(false);
-                                }
-                                setNewTodo(e.target.value)
-                            }}
+                        <Field 
+                            name="todo" 
+                            placeholder="Enter your task..." 
+                            component={CustomInput}  
                         />
 
-                        <Button className="col-2" color="primary">
+                        <Button type="submit" className="col-2 p-2" color="primary">
                             Add
                         </Button>
                     </Form>
-                    {
-                        validationError && <Alert color="danger">Please enter your task first</Alert>
-                    }
                 </header>
 
                 <main>
@@ -77,4 +65,7 @@ const ToDoApp = () => {
     )
 }
 
-export default ToDoApp;
+export default reduxForm({
+    form: 'newTodo',
+    validate,
+})(ToDoApp);

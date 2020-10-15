@@ -1,25 +1,24 @@
-export const META = 'META';
-export const ADD_TODO = 'ADD_TODO';
-export const CLEAR_TODOS = 'CLEAR_TODOS';
-export const REMOVE_TODO = 'REMOVE_TODO';
-export const UPDATE_STORAGE = 'UPDATE_STORAGE';
-export const INITIALIZE_TODOS = 'INITIALIZE_TODOS';
+const TYPE = ((prefix) => ({
+    META: `${prefix}META `,
+    ADD: `${prefix}ADD `,
+    CLEAR: `${prefix}CLEAR `,
+    REMOVE: `${prefix}REMOVE `,
+    UPDATE: `${prefix}UPDATE `,
+    INITIALIZE: `${prefix}INITIALIZE `,
+}))('@todos/');
 
-export const addTodo = (payload) => ({
-    type: ADD_TODO,
-    payload,
-});
+export default TYPE;
 
 export const initialize = () => ({
-    type: INITIALIZE_TODOS,
+    type: TYPE.INITIALIZE,
 });
 
 export const removeTodo = (id) => ({
-    type: REMOVE_TODO,
+    type: TYPE.REMOVE,
     id,
 });
 
 export const updateMeta = payload => ({
-    type: META,
+    type: TYPE.META,
     payload,
 });

@@ -1,24 +1,23 @@
-import { META, CLEAR_TODOS } from './actions';
+import TYPE from './actions';
 
-const initial_state = {
+export const initial = {
     todos: [],
     initialized: false,
+    disable: false,
 };
 
-const todosReducer = (state=initial_state, action) => {
+export default function(state=initial, action) {
     switch (action.type) {
-            case META:
+            case TYPE.META:
                 return {
                     ...state,
                     ...action.payload,
                 }
 
-            case CLEAR_TODOS:
-                return initial_state;
+            case TYPE.CLEAR:
+                return initial;
 
         default:
             return state;
     }
 }
-
-export default todosReducer;

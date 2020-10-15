@@ -1,11 +1,11 @@
-import { SAVE_META, CLEAR_TODO } from '../TodoDetail/actions';
+import { SAVE_META, CLEAR_TODO } from './actions';
 
 const initial_state = {
     todo: {},
     initialized: false,
+    disabled: false,
 }
-
-const todoReducer = (state=initial_state, action) => {
+export default function(state=initial_state, action) {
     switch (action.type) {
         case SAVE_META:
             return {
@@ -20,5 +20,3 @@ const todoReducer = (state=initial_state, action) => {
             return state;
     }
 }
-
-export default todoReducer;

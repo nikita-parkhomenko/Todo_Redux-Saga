@@ -5,7 +5,7 @@ const CustomInput = ({ label, placeholder, input, type, meta: { touched, error }
     const valid = useMemo(() => touched && !error ? !error : null, [error, touched]);
 
     return (
-        <div className="input-row mb-3">
+        <div className="input-row w-100 mb-3">
             <Label>{label}</Label>
             <Input valid={valid} type={type} placeholder={placeholder} {...input} />
             {error && touched && <div className="text-danger">{error}</div>}
