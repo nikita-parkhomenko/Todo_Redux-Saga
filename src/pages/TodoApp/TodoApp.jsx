@@ -2,22 +2,29 @@
 import { Form } from 'reactstrap';
 import { Alert } from 'reactstrap';
 import { Button } from 'reactstrap';
+import React, { useCallback } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import React, { useEffect, useCallback } from 'react';
+import { Container, Row, Col } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import CustomInput from '../../components/CustomInput/CustomInput';
 
 // local dependencies
 import TYPE from './actions';
+import Validate from '../../services/validateService';
 import TodoList from '../../components/TodoList/TodoList';
+import CustomInput from '../../components/CustomInput/CustomInput';
 
 const validate = values => {
     const error = {};
 
-    if (!values.todo) {
-        error.todo = 'Required!'
-    } else if (values.todo.length < 5) {
-        error.todo = 'Must be 5 characters or more'
+    const validName = Validate.isValidName(values.todo, { minL: 5, maxL: 10, noSpaces: true });
+    if (!validName) {
+        error.todo = 'Must be at least 5 and no more than 10 characters with no whitespaces'
+    }
+
+    const validEmail = Validate.isValidEmail(values.email, {});
+    console.log(validEmail)
+    if (!validEmail) {
+        error.email = 'You have entered an invalid email address!'
     }
 
     return error;
@@ -27,14 +34,9 @@ const FORM_NAME = 'newTodoForm';
 
 const ToDoApp = ({ handleSubmit }) => {
     const dispatch = useDispatch();
-    const disabled = useSelector(state => state.todosReducer.disabled);
-    const errorMessage = useSelector(state => state.todosReducer.errorMessage);
+    const { disabled, errorMessage } = useSelector(state => state.todosReducer);
 
-    useEffect(() => () => dispatch({ type: TYPE.CLEAR }), [dispatch]);
-
-    const submit = useCallback( (values) => {
-        dispatch({ type: TYPE.META, payload: { disabled: true }});
-
+    const submit = useCallback(values => {
         const todo = {
             title: values.todo,
             completed: false,
@@ -50,19 +52,40 @@ const ToDoApp = ({ handleSubmit }) => {
                     { errorMessage && <Alert className="mt-2 text-right" color="danger"> {errorMessage} </Alert> }
                     <h1>Todos</h1>
 
-                    <Form 
+                    <Form
                         onSubmit={handleSubmit(submit)}
                         className="row w-100 d-flex justify-content-between align-items-center mb-2"
                     >
-                        <Field 
-                            name="todo" 
-                            placeholder="Enter your task..." 
-                            component={CustomInput}  
-                        />
-
-                        <Button disabled={disabled} type="submit" className="col-2 p-2" color="primary">
-                            Add
-                        </Button>
+                        <Container fluid className="px-0">
+                            <Row >
+                                <Col xs="10">
+                                    <Field
+                                        name="name"
+                                        placeholder="Enter your name"
+                                        component={CustomInput}
+                                    />
+                                </Col>
+                                <Col xs="2">
+                                    <Button className="w-100" disabled={disabled} type="submit" color="primary">
+                                        Add
+                                    </Button>
+                                </Col>
+                            </Row>
+                            <Row >
+                                <Col xs="10">
+                                    <Field
+                                        name="email"
+                                        placeholder="Enter your email"
+                                        component={CustomInput}
+                                    />
+                                </Col>
+                                <Col xs="2">
+                                    <Button className="w-100" disabled={disabled} type="submit" color="primary">
+                                        Add
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Container>
                     </Form>
                 </header>
 

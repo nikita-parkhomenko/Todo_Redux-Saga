@@ -10,12 +10,13 @@ import TYPE from '../../pages/TodoApp/actions';
 
 
 const TodoList = () => {
-    const todos = useSelector(state => state.todosReducer.todos);
-    const initialized = useSelector(state => state.todosReducer.initialized);
+    const { todos, initialized } = useSelector(state => state.todosReducer);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch({ type: TYPE.INITIALIZE });
+
+        return () => dispatch({ type: TYPE.CLEAR })
     }, [dispatch]);
 
     if (!initialized) {

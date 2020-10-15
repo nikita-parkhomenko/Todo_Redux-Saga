@@ -5,7 +5,7 @@ import { Button } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 import { Jumbotron } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // local dependencies
@@ -15,11 +15,8 @@ import TodoAdditionalForm from '../../components/TodoAdditionalForm/TodoAddition
 
 const TodoDetail = ({ match }) => {
     const {id} = match.params;
-
     const dispatch = useDispatch();
-    const todo = useSelector(state => state.todoReducer.todo);
-    const initialized = useSelector(state => state.todoReducer.initialized);
-    const errorMessage = useSelector(state => state.todoReducer.errorMessage);
+    const { todo, initialized, errorMessage } = useSelector(state => state.todoReducer);
 
     useEffect(() => {
         dispatch({ type: TYPE.INITIALIZE, payload: {id} });
@@ -27,8 +24,9 @@ const TodoDetail = ({ match }) => {
         return () => dispatch({ type: TYPE.CLEAR })
     }, [dispatch, id]);
 
-    if (!initialized) {
+    const toggleCompleted = useCallback(() => dispatch({ type: TYPE.TOGGLE_COMPLETED, payload: {id} }), [dispatch, id]);
 
+    if (!initialized) {
         return <Jumbotron>
             <div className="text-center">
                 <Spinner type="grow" color="primary" />
@@ -51,7 +49,7 @@ const TodoDetail = ({ match }) => {
                         </Badge>
                         <h3
                             className={`${todo.completed ? 'completed' : ''} pointer`}
-                            onClick={() => dispatch({ type: TYPE.TOGGLE_COMPLETED, payload: {id} })}
+                            onClick={toggleCompleted}
                         >
                             {todo.title}
                         </h3>
