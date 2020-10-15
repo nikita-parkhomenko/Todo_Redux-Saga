@@ -1,3 +1,4 @@
+// local dependencies
 import TYPE from './actions';
 
 export const initial = {

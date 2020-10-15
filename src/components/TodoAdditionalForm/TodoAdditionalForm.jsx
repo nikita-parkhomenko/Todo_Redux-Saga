@@ -35,7 +35,7 @@ const FORM_NAME = 'additionalForm';
 
 const TodoAdditionalForm = ({ handleSubmit, pristine, reset, submitting, todo }) => {
     const dispatch = useDispatch();
-    const disabled = useSelector(state => state.todoReducer.disabled);
+    const { disabled } = useSelector(state => state.todoReducer);
 
     const submitForm = useCallback(values => {
         dispatch({ type: TYPE.UPDATE, payload: { values, todo } });

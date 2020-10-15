@@ -3,7 +3,7 @@ import { call, put, takeEvery, delay } from 'redux-saga/effects';
 
 // local dependencies
 import TYPE from './actions';
-import { getStorage } from '../../api/api';
+import { getStorage, setStorage } from '../../api/api';
 
 export default function* initializeTodo() {
     yield takeEvery(TYPE.UPDATE, updateTodoSaga);
@@ -12,15 +12,15 @@ export default function* initializeTodo() {
 }
 
 function* initializeTodoSaga({ payload: { id } }) {
+    yield delay(1000);
     try {
         const todos = yield call(getStorage);
         const todo = todos.find(todo => todo.id === +id);
         yield put({ type: TYPE.META, payload: { todo } });
-        yield delay(1000);
-        yield put({ type: TYPE.META, payload: { initialized: true } });
     } catch ({ message: errorMessage }) {
-        yield put({ type: TYPE.META, payload: { errorMessage, initialized: true }});
+        yield put({ type: TYPE.META, payload: { errorMessage }});
     }
+    yield put({ type: TYPE.META, payload: { initialized: true } });
 }
 
 function* toggleCompletedSaga({ payload: { id } }) {
@@ -29,7 +29,7 @@ function* toggleCompletedSaga({ payload: { id } }) {
         const updatedTodos = todos.map(
             todo => todo.id === +id ? {...todo, completed: !todo.completed} : todo
         );
-        localStorage.setItem('state', JSON.stringify(updatedTodos));
+        yield call(setStorage, updatedTodos);
         yield put({ type: TYPE.META, payload: { todo: updatedTodos.find(todo => todo.id === +id)} });
     } catch ({ message: errorMessage }) {
         yield put({ type: TYPE.META, payload: { errorMessage, initialized: true }});
@@ -37,15 +37,15 @@ function* toggleCompletedSaga({ payload: { id } }) {
 }
 
 function* updateTodoSaga({ payload: { todo, values } }) {
+    yield put({ type: TYPE.META, payload: { disabled: true } });
+    yield delay(1000);
     try {
-        yield put({ type: TYPE.META, payload: { disabled: true } });
-        yield delay(1000);
         const todos = yield call(getStorage);
         const updatedTodo = { ...todo, ...values };
         const updatedTodos = todos.map((task) => task.id === todo.id ? updatedTodo : task);
-        localStorage.setItem('state', JSON.stringify(updatedTodos));
+        yield call(setStorage, updatedTodos);
         yield put({ type: TYPE.META, payload: { todo: updatedTodo, disabled: false } });
     } catch ({ message: errorMessage }) {
-        yield put({ type: TYPE.META, payload: { errorMessage, initialized: true }});
+        yield put({ type: TYPE.META, payload: { errorMessage }});
     }
 }
