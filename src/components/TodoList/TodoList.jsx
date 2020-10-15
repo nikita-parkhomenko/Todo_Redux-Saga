@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 // local dependencies
 import TodoItem from '../TodoItem/TodoItem';
-import { initialize } from '../../pages/TodoApp/actions';
+import TYPE from '../../pages/TodoApp/actions';
 
 
 const TodoList = () => {
@@ -15,7 +15,7 @@ const TodoList = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(initialize());
+        dispatch({ type: TYPE.INITIALIZE });
     }, [dispatch]);
 
     if (!initialized) {

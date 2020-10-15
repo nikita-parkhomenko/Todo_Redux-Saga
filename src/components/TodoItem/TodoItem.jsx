@@ -2,31 +2,33 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { useDispatch} from 'react-redux';
 import { ListGroupItem } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
 
 // local dependencies
 import { todoDetails } from '../../routes';
-import { removeTodo } from '../../pages/TodoApp/actions';
+import TYPE from '../../pages/TodoApp/actions';
 
 const TodoItem = ({ title, id, completed }) => {
     const dispatch = useDispatch();
+    const disabled = useSelector(state => state.todosReducer.disabled);
 
     return (
-            <ListGroupItem 
+            <ListGroupItem
                 action
                 className="d-flex justify-content-between align-items-center font-weight-bold"
             >
-                <Link 
+                <Link
                     className={`col-8 ${completed ? 'completed' : ''}`}
                     to={todoDetails.link(id)}
                 >
                     {title}
                 </Link>
-                <Button 
+                <Button
                     color="danger"
                     className="col-2"
-                    onClick={() => dispatch(removeTodo(id))}
+                    disabled={disabled}
+                    onClick={() => dispatch({ type: TYPE.REMOVE, payload: {id} })}
                 >
                     remove
                 </Button>

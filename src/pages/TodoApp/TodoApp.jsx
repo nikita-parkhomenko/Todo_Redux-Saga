@@ -1,9 +1,10 @@
 // outsource dependencies
 import { Form } from 'reactstrap';
+import { Alert } from 'reactstrap';
 import { Button } from 'reactstrap';
-import { useDispatch } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import React, { useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomInput from '../../components/CustomInput/CustomInput';
 
 // local dependencies
@@ -22,12 +23,18 @@ const validate = values => {
     return error;
 }
 
+const FORM_NAME = 'newTodoForm';
+
 const ToDoApp = ({ handleSubmit }) => {
     const dispatch = useDispatch();
+    const disabled = useSelector(state => state.todosReducer.disabled);
+    const errorMessage = useSelector(state => state.todosReducer.errorMessage);
 
     useEffect(() => () => dispatch({ type: TYPE.CLEAR }), [dispatch]);
 
     const submit = useCallback( (values) => {
+        dispatch({ type: TYPE.META, payload: { disabled: true }});
+
         const todo = {
             title: values.todo,
             completed: false,
@@ -40,6 +47,7 @@ const ToDoApp = ({ handleSubmit }) => {
     return (
             <div className="d-flex flex-column align-items-stretch mx-auto">
                 <header className="mb-3 d-flex flex-column align-items-center">
+                    { errorMessage && <Alert className="mt-2 text-right" color="danger"> {errorMessage} </Alert> }
                     <h1>Todos</h1>
 
                     <Form 
@@ -52,7 +60,7 @@ const ToDoApp = ({ handleSubmit }) => {
                             component={CustomInput}  
                         />
 
-                        <Button type="submit" className="col-2 p-2" color="primary">
+                        <Button disabled={disabled} type="submit" className="col-2 p-2" color="primary">
                             Add
                         </Button>
                     </Form>
@@ -66,6 +74,6 @@ const ToDoApp = ({ handleSubmit }) => {
 }
 
 export default reduxForm({
-    form: 'newTodo',
+    form: FORM_NAME,
     validate,
 })(ToDoApp);

@@ -3,7 +3,7 @@ import { takeEvery, put, call, delay, select } from 'redux-saga/effects';
 
 // local dependencies
 import { getStorage } from '../../api/api';
-import TYPE, { updateMeta } from './actions';
+import TYPE from './actions';
 
 export default function* () {
     yield takeEvery(TYPE.INITIALIZE, initializeSaga);
@@ -13,32 +13,39 @@ export default function* () {
 }
 
 function* initializeSaga() {
-    const data = yield call(getStorage);
-
-    yield put(updateMeta({ todos: (data || []) }));
-    
-    yield delay(2 * 1000);
-    yield put(updateMeta({ initialized: true }));
+    try {
+        yield put({ type: TYPE.META, payload: { disabled: true }});
+        const data = yield call(getStorage);
+        yield put({ type: TYPE.META, payload: {todos: data || []}});
+        yield delay(2 * 1000);
+        yield put({ type: TYPE.META, payload: { initialized: true, disabled: false }});
+    } catch ({ message: errorMessage }) {
+        yield put({ type: TYPE.META, payload: { errorMessage }})
+    }
 }
 
 function* addTodoSaga({ payload }) {
-    const todos = yield select(state => state.todosReducer.todos);
-
-    yield put(updateMeta({ todos: [payload, ...todos] }));
-
-    yield put({ type: TYPE.UPDATE });
+    try {
+        const todos = yield select(state => state.todosReducer.todos);
+        yield delay(1000);
+        yield put({ type: TYPE.META, payload: {todos: [payload, ...todos], disabled: false } })
+        yield put({ type: TYPE.UPDATE });
+    } catch ({ message: errorMessage }) {
+        yield put( { type: TYPE.META, payload: { errorMessage }})
+    }
 }
 
-function* removeTodoSaga({ id }) {
-    const todos = yield select(state => state.todosReducer.todos);
-
-    yield put(updateMeta({ todos: todos.filter(todo => todo.id !== id) }));
-
-    yield put({ type: TYPE.UPDATE });
+function* removeTodoSaga({ payload: { id } }) {
+    try {
+        const todos = yield select(state => state.todosReducer.todos);
+        yield put({ type: TYPE.META, payload: {todos: todos.filter(todo => todo.id !== id)} });
+        yield put({ type: TYPE.UPDATE });
+    } catch ({ message: errorMessage }) {
+        yield put( { type: TYPE.META, payload: { errorMessage }})
+    }
 }
 
 function* updateStorageSaga() {
     const todos = yield select(state => state.todosReducer.todos);
-
     localStorage.setItem('state', JSON.stringify(todos));
 }

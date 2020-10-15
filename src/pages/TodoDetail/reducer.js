@@ -1,21 +1,23 @@
-import { SAVE_META, CLEAR_TODO } from './actions';
+// local dependencies
+import TYPE from './actions';
 
-const initial_state = {
+const initial = {
     todo: {},
     initialized: false,
     disabled: false,
+    errorMessage: null,
 }
-export default function(state=initial_state, action) {
+export default function(state= initial, action) {
     switch (action.type) {
-        case SAVE_META:
+        case TYPE.META:
             return {
                 ...state,
                 ...action.payload,
             }
 
-        case CLEAR_TODO:
-            return initial_state;
-            
+        case TYPE.CLEAR:
+            return initial;
+
         default:
             return state;
     }
