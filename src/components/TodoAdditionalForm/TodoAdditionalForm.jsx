@@ -1,13 +1,13 @@
 // outsource dependencies
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
 import { Form, Button } from 'reactstrap';
+import React, { useCallback } from 'react';
+import { Field, reduxForm } from 'redux-form';
+import { useDispatch, useSelector } from 'react-redux';
 
 // local dependencies
+import TYPE from '../../pages/TodoDetail/actions';
 import CustomInput from '../CustomInput/CustomInput';
 import CustomSelect from '../CustomSelect/CustomSelect';
-import { UPDATE_TODO } from '../../pages/TodoDetail/actions';
 
 const validate = values => {
     const errors = {};
@@ -31,11 +31,14 @@ const priorityOptions = [
     { value: 'high', text: 'High' },
 ];
 
+const FORM_NAME = 'additionalForm';
+
 const TodoAdditionalForm = ({ handleSubmit, pristine, reset, submitting, todo }) => {
     const dispatch = useDispatch();
+    const disabled = useSelector(state => state.todoReducer.disabled);
 
     const submitForm = useCallback(values => {
-        dispatch({ type: UPDATE_TODO, payload: { values, todo } });
+        dispatch({ type: TYPE.UPDATE, payload: { values, todo } });
     }, [dispatch, todo]);
 
     return (
@@ -43,29 +46,29 @@ const TodoAdditionalForm = ({ handleSubmit, pristine, reset, submitting, todo })
             <h3 className="text-center pb-3">Add additional information</h3>
 
             <Form onSubmit={handleSubmit(submitForm)}>
-                
+
                 <Field
                     placeholder="Write new title"
-                    label="Change your title" 
-                    name="title" 
-                    type="input" 
-                    component={CustomInput} 
+                    label="Change your title"
+                    name="title"
+                    type="input"
+                    component={CustomInput}
                 />
                 <Field
                     placeholder="Write your description"
-                    label="Add description" 
-                    name="description" 
-                    type="textarea" 
-                    component={CustomInput} 
+                    label="Add description"
+                    name="description"
+                    type="textarea"
+                    component={CustomInput}
                 />
-                <Field 
-                    label="Add priority" 
-                    name="priority" 
-                    options={priorityOptions} 
-                    component={CustomSelect} 
+                <Field
+                    label="Add priority"
+                    name="priority"
+                    options={priorityOptions}
+                    component={CustomSelect}
                 />
 
-                <Button type="submit" className="mr-2" color="success" disabled={submitting}>Save</Button>
+                <Button disabled={disabled} type="submit" className="mr-2" color="success">Save</Button>
                 <Button type="reset" disabled={pristine || submitting} onClick={reset} color="warning">Reset</Button>
             </Form>
 
@@ -74,6 +77,6 @@ const TodoAdditionalForm = ({ handleSubmit, pristine, reset, submitting, todo })
 }
 
 export default reduxForm({
-    form: 'additional',
+    form: FORM_NAME,
     validate,
 })(TodoAdditionalForm);

@@ -1,5 +1,9 @@
-export const SAVE_META = 'SAVE_META';
-export const INITIALIZE = 'INITIALIZE';
-export const CLEAR_TODO = 'CLEAR_TODO';
-export const UPDATE_TODO = 'UPDATE_TODO';
-export const TOGGLE_COMPLETED = 'TOGGLE_COMPLETED';
+const TYPE = ((prefix) => ({
+    META: `${prefix}META`,
+    CLEAR: `${prefix}CLEAR`,
+    UPDATE: `${prefix}UPDATE`,
+    INITIALIZE: `${prefix}INITIALIZE`,
+    TOGGLE_COMPLETED: `${prefix}TOGGLE_COMPLETED`,
+}))('@todo/');
+
+export default TYPE;

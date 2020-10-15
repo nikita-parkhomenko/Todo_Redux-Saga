@@ -4,9 +4,10 @@ export const initial = {
     todos: [],
     initialized: false,
     disable: false,
+    errorMessage: null,
 };
 
-export default function(state=initial, action) {
+export default function(state= initial, action) {
     switch (action.type) {
             case TYPE.META:
                 return {
